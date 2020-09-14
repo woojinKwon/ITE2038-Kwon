@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "UTF-8" />
+        <title>
+            patient_information
+        </title>
+        <script
+        src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous"></script>
+              <script>  
+              $(document).ready(function () {
+                  $('#search').submit((e)=>{
+                    e.preventDefault()
+                    FormData = {
+                        "table_name" :"store",
+                        "data_name" : e.target.name.value
+                    }
+                    $.ajax({
+                          url: "/name_search",
+                          type : "POST",
+                          cache: true,
+                          data :JSON.stringify(FormData),
+                          datatype: 'json',
+                          contentType :"application/json",
+                          success: res=>{
+                            find_result = JSON.parse(res)
+                            if(res["result"] == "fail"){
+                                alert("검색결과가 없습니다")
+                                return
+                            }
+                            else{
+                            let tBodyHtml = ''
+                            for(let row of find_result){
+                                tBodyHtml += `<tr>
+                                    <td></td>
+                                    <td>${row["name"]}</td>
+                                    <td>${row["address"]}</td>
+                                    <td style = "text-align:center;"><form method="POST" action="/belong_store">
+                            <button type="submit" name="submit" value="${row["id"]}" >등록</button>
+                        </form></td>
+                                    </tr>`
+                            }
+                            $('table tbody').html(tBodyHtml)
+                            }
+                          }
+                          })
+
+                    }) 
+                })
+
+
+              </script>
+    </head>
+
+    <body>
+        
+        <form action = '/'>
+            <button type = "submit">취소</button>
+            </form>
+        <h3>소속 약국 찾기</h3>
+        <form id = "search" method = "POST">
+            <p>약국이름 : <input id = "name" type="text" name="name" placeholder="이름 입력"/>
+            <button type="submit">찾기</button></p>
+
+            </form>
+        <style>
+                tbody>tr {
+                  counter-increment: aaa;
+                }
+                tbody>tr>td:first-child:before {
+                  content: counter(aaa) " ";
+                }
+                </style>
+        <table border = '1'>
+            <thead>
+                <tr>
+                    <th>no.</th>
+                    <th>이름</th>
+                    <th>주소</th>
+                    <th>등록</th>
+                </tr>
+            </thead>
+            <tbody>
+               
+            </tbody>
+        </table>
+            
+    </body>
+</html>

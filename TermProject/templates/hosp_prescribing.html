@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset = "UTF-8" />
+        <title>
+            phonebook initial display
+        </title>
+        <script
+        src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous"></script>
+        
+        <script>
+function checks(){ 
+
+    //이름 공백 검사 
+    if($("#patient_name").val() == ""){ 
+        alert("이름을 입력해주세요"); 
+        $("#patient_name").focus(); 
+        return false; }
+        else{
+            alert("처방완료");
+            return true;
+        }
+  }
+
+
+
+        </script>
+    </head>
+
+    <body>
+            <style> input:focus, textarea:focus{     outline: none; } </style>
+
+    <form method = "POST" action = "/register_prescription" onsubmit="return checks();">
+        <legend>처방전</legend>
+        <table style="border: 1px solid; border-collapse: collapse;">   
+
+
+            <tr>
+                <td style = "border: 1px solid; width:200px">처방 약품 명칭</td>
+                <td style = "border: 1px solid; width: 10px">1회 투약량</td>
+                <td style = "border: 1px solid;width: 10px;" >1일 투여횟수</td>
+                <td style = "border: 1px solid;width: 10px">총 투약일수</td>
+            </tr>
+            <tr>
+                <td style = "border: 1px solid; width:200px"><input style ='border:0'size = "30px"type = "text" name = "medi_name1"id = "medi_name1"></td>
+                <td style = "border: 1px solid; width: 10px"><input style ='border:0'size = "10px"type = "text" name = "one_dose1"id = "one_dose1"></td>
+                <td style = "border: 1px solid;width: 10px"><input style ='border:0'size = "11px"type = "text" name = "perday1"id = "perday1"></td>
+                <td style = "border: 1px solid;width: 10px"><input style ='border:0'size = "10px"type = "text" name = "total1"id = "total1"></td>
+            </tr>
+            <tr>
+                <td style = "border: 1px solid; width:200px"><input style ='border:0'size = "30px"type = "text" name = "medi_name2"id = "medi_name2"></td>
+                <td style = "border: 1px solid; width: 10px"><input style ='border:0'size = "10px"type = "text" name = "one_dose2"id = "one_dose2"></td>
+                <td style = "border: 1px solid;width: 10px"><input style ='border:0'size = "11px"type = "text" name = "perday2"id = "perday2"></td>
+                <td style = "border: 1px solid;width: 10px"><input style ='border:0'size = "10px"type = "text" name = "total2"id = "total2"></td>
+            </tr>
+            <tr>
+                <td style = "border: 1px solid; width:200px"><input style ='border:0'size = "30px"type = "text" name = "medi_name3"id = "medi_name3"></td>
+                <td style = "border: 1px solid; width: 10px"><input style ='border:0'size = "10px"type = "text" name = "one_dose3"id = "one_dose3"></td>
+                <td style = "border: 1px solid;width: 10px"><input style ='border:0'size = "11px"type = "text" name = "perday3"id = "perday3"></td>
+                <td style = "border: 1px solid;width: 10px"><input style ='border:0'size = "10px"type = "text" name = "total3"id = "total3"></td>
+            </tr>
+            <tr>
+                <td style = "border: 1px solid; width:200px"><input style ='border:0'size = "30px"type = "text" name = "medi_name4"id = "medi_name4"></td>
+                <td style = "border: 1px solid; width: 10px"><input style ='border:0'size = "10px"type = "text" name = "one_dose4"id = "one_dose4"></td>
+                <td style = "border: 1px solid;width: 10px"><input style ='border:0'size = "11px"type = "text" name = "perday4"id = "perday4"></td>
+                <td style = "border: 1px solid;width: 10px"><input style ='border:0'size = "10px"type = "text" name = "total4"id = "total4"></td>
+            </tr>
+            </table>
+            <button type ="submit">처방</button>
+
+
+            
+            
+    </form>
+        
+            
+    </body>
+        
+        
+
+</html>

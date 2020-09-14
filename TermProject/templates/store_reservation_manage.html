@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "UTF-8" />
+        <title>
+            patient_information
+        </title>
+        <script
+        src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous"></script>
+              <script>  
+              $(document).ready(function () {             
+                    $.ajax({
+                          url: "/store_current_reservation",
+                          cache: true
+                    }).done(data=>{
+                        find_result = JSON.parse(data)
+                        if(find_result["result"] == "fail"){
+                            alert("대기중인 예약자가 없습니다")
+                            return;
+                        }
+                        else{
+                            let tBodyHtml = ''
+                            for(let row of find_result){
+                                tBodyHtml += `<tr>
+                                    <td></td>
+                                    <td>${row["user_name"]}</td>
+                                    <td>${row["user_phone"]}</td>
+                                    <td>${row["date"]}</td>
+                                    <td>${row["time"]}시</td>`
+                                    if(row["prescription_id2"] != null){
+                                   tBodyHtml+= `<td style = "text-align:center;"><form method="POST" action="/store_prescribing">
+                            <button type="submit" name="submit" value="${row["user_name"]},${row["user_local"]},${row["user_domain"]},${row["date"]},${row["time"]},${row["prescription_id2"]}">열람</button>
+                        </form></td>`
+                    }
+                    else{
+                        tBodyHtml +=`<td style = "text-align:center;">미처방</td>`
+                    }
+                    tBodyHtml+= `</tr>`
+                            }
+                            $('table tbody').html(tBodyHtml)
+                        }
+                    })
+                        
+                })
+
+
+              </script>
+    </head>
+
+    <body>
+        
+        <form action = '/store_menu'>
+            <button type = "submit">돌아가기</button>
+            </form>
+        <h3>예약자 명단</h3>
+
+        <style>
+                tbody>tr {
+                  counter-increment: aaa;
+                }
+                tbody>tr>td:first-child:before {
+                  content: counter(aaa) " ";
+                }
+                </style>
+        <table border = '1'>
+            <thead>
+                <tr>
+                    <th>no.</th>
+                    <th>예약자 이름</th>
+                    <th>전화번호</th>
+                    <th>예약 날짜</th>
+                    <th>예약 시간</th>
+                    <th>처방전 열람</th>
+                </tr>
+            </thead>
+            <tbody>
+               
+            </tbody>
+        </table>          
+    </body>
+</html>

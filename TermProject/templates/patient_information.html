@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "UTF-8" />
+        <title>
+            patient_information
+        </title>
+        <script
+        src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous"></script>
+              <script>  
+              $(document).ready(function () {             
+                    $.ajax({
+                          url: "/bookmark_list",
+                          cache: true
+                    }).done(data=>{
+                            find_result = JSON.parse(data)
+                            let tBodyHtml = ''
+                            for(let row of find_result){
+                                tBodyHtml += `<tr>
+                                    <td></td>
+                                    <td>${row["name"]}</td>
+                                    <td>${row["address"]}</td>
+                                    <td style = "text-align:center;"><form method="POST" action="/reservation_hosp">
+                            <button type="submit" name="submit" value="${row["id"]}" >예약</button>
+                        </form></td>
+                        <td style = "text-align:center;"><form id = "delete_bookmark" method="POST" action = "/delete_bookmark">
+                            <button type="submit" name="delete" value="${row["id"]}" >삭제</button>
+                        </form></td>
+                                    </tr>`
+                            }
+                            $('#bookmark_table').html(tBodyHtml)
+                          })
+
+                          $.ajax({
+                          url: "/reservation_list",
+                          cache: true
+                    }).done(data=>{
+                            find_result = JSON.parse(data)
+                            let tBodyHtml = ''
+                            for(let row of find_result){
+                                tBodyHtml += `<tr>
+                                    <td></td>
+                                    <td>${row[0]}</td>
+                                    <td>${row[1]}</td>
+                                    <td>${row[2]}</td>
+                                    <td style = "text-align:center;"><form method="POST" action ="/patient_open_prescription">
+                                    <button type="submit" id = "submit" name= "submit" value = "${row[3]}">열람</button>
+                                    </form>
+                                    </tr>`
+                            }
+                            $('#reservation_table').html(tBodyHtml)
+                          })
+
+                })
+
+
+              </script>
+    </head>
+
+    <body>
+        
+        <form action = '/patient_menu'>
+            <button type = "submit">돌아가기</button>
+            </form>
+        <h3>즐겨찾기 목록</h3>
+
+        <style>
+                tbody>tr {
+                  counter-increment: aaa;
+                }
+                tbody>tr>td:first-child:before {
+                  content: counter(aaa) " ";
+                }
+                </style>
+        <table border = '1'>
+            <thead>
+                <tr>
+                    <th>no.</th>
+                    <th>이름</th>
+                    <th>주소</th>
+                    <th>예약하기</th>
+                    <th>즐겨찾기 삭제</th>
+                </tr>
+            </thead>
+            <tbody id = bookmark_table>
+               
+            </tbody>
+        </table>
+
+        <h3>최근에 방문했던 병원 목록</h3>
+        <table border = '1'>
+                <thead>
+                    <tr>
+                        <th>no.</th>
+                        <th>이름</th>
+                        <th>주소</th>
+                        <th>방문 일자</th>
+                        <th>처방전열람</th>
+                    </tr>
+                </thead>
+                <tbody id = reservation_table>
+                   
+                </tbody>
+            </table>
+
+            
+    </body>
+</html>

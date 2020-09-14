@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Document</title>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="./jquery-ui-1.12.1/datepicker-ko.js"></script>
+
+    <script>
+ $(document).ready(() =>{
+          $.ajax({
+    url: "/store_data",
+    cache: false}).done(data =>{
+        result = JSON.parse(data)
+        let selectHtml = ''
+        let h3html = ''
+        h3html +=`해당 병원 영업시간 : ${result["start_time"]}시 ~ ${result["end_time"]}시`
+        for(i = result["start_time"]; i<result["end_time"] ; i++){
+            selectHtml += `<option value="${i}">${i}시</option>`
+  }
+  $('select').html(selectHtml)
+  $('h3').html(h3html)
+    });
+
+  
+  $('#datepicker').datepicker({
+    dateFormat: 'yy-mm-dd',
+    minDate: "0D", //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
+    maxDate: "+1Y", //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후) 
+    dayNames: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
+    dayNamesMin: ['일','월', '화', '수', '목', '금', '토'], 
+    monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
+    monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+  });
+})
+function check(){
+    var date = new Date(); 
+    var year = date.getFullYear(); 
+    var month = new String(date.getMonth()+1); 
+    var day = new String(date.getDate()); 
+    var today;
+    // 한자리수일 경우 0을 채워준다. 
+    if(month.length == 1) 
+      month = "0" + month; 
+    if(day.length == 1)
+      day = "0" + day;
+
+    today = year + "-" + month + "-" + day;
+        if($('#datepicker').val() == today ){
+          if($('#time').val()<=date.getHours()){
+            alert("현재 시각 이후의 시각에만 예약할 수 있습니다!");
+            return false;
+          }
+        }
+        if($('#datepicker').val() == "" ){
+         
+         alert("예약날짜을 선택해주세요!");
+         return false;
+     }
+  }
+    </script>
+
+  </head>
+
+    <body>
+    <h3></h3>
+
+
+        <form id = "time_form" method = "POST" action = "/reservation_store_success" onsubmit="return check();">
+          <div>
+              <span>날짜 선택 : </span>
+              <input type="text" name="datepicker" id="datepicker" readonly> 
+            </div>
+            <div>
+          <span>예약 시간 선택</span>
+            <select name="time" id = "time" value= "예약시간선택">
+ 
+            </select>
+            <button type = "submit">예약</button>
+          </form>
+    </div>
+    <form action='/patient_menu'>
+      <button type ="submit">돌아가기</button> 
+  </form>
+</body>
+
+</html>

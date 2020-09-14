@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "UTF-8" />
+        <title>
+            patient_information
+        </title>
+        <script
+        src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous"></script>
+              <script>  
+              $(document).ready(function () {             
+                    $.ajax({
+                          url: "/hosp_current_reservation",
+                          cache: true
+                    }).done(data=>{
+                        find_result = JSON.parse(data)
+                        if(find_result["result"] == "fail"){
+                            alert("대기중인 예약자가 없습니다")
+                            return;
+                        }
+                        else{
+                            
+                            let tBodyHtml = ''
+                            for(let row of find_result){
+                                tBodyHtml += `<tr>
+                                    <td></td>
+                                    <td>${row["user_name"]}</td>
+                                    <td>${row["user_phone"]}</td>
+                                    <td>${row["date"]}</td>
+                                    <td>${row["time"]}시</td>
+                                    <td style = "text-align:center;"><form method="POST" action="/hosp_prescribing">
+                            <button type="submit" name="submit" value="${row["user_name"]},${row["user_local"]},${row["user_domain"]},${row["date"]},${row["time"]}">처방</button>
+                        </form></td>
+                        <td style = "text-align:center;"><form id = "rejection" method="POST" action = "/hosp_rejection">
+                            <button type="submit" name="delete" value="${row["user_local"]},${row["user_domain"]},${row["date"]},${row["time"]}" >거부</button>
+                        </form></td>  
+                                    </tr>` // rejection value 는 split 이용
+                            }
+                            $('table tbody').html(tBodyHtml)
+                        }
+                    })
+                        
+                })
+
+
+              </script>
+    </head>
+
+    <body>
+        
+        <form action = '/hosp_menu'>
+            <button type = "submit">돌아가기</button>
+            </form>
+        <h3>예약자 명단</h3>
+
+        <style>
+                tbody>tr {
+                  counter-increment: aaa;
+                }
+                tbody>tr>td:first-child:before {
+                  content: counter(aaa) " ";
+                }
+                </style>
+        <table border = '1'>
+            <thead>
+                <tr>
+                    <th>no.</th>
+                    <th>예약자 이름</th>
+                    <th>전화번호</th>
+                    <th>예약 날짜</th>
+                    <th>예약 시간</th>
+                    <th>처방</th>
+                    <th>거부</th>
+                </tr>
+            </thead>
+            <tbody>
+               
+            </tbody>
+        </table>          
+    </body>
+</html>

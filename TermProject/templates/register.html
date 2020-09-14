@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset = "UTF-8" />
+        <title>
+            phonebook initial display
+        </title>
+        <script
+        src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous"></script>
+        
+        <script>
+          $(document).ready(function (){
+            $(function(){
+                $('#pwd').keyup(function(){
+            if(getTextLength($('#pwd').val()) < 4 || getTextLength($('#pwd').val()) > 12){
+                $('#chkNotice').html('영문 대소문자나 숫자 4~12자리만 허용')
+                $('#chkNotice').attr('color', '#f82a2aa3')
+            }
+            else{
+                $('#chkNotice').html('')
+            }
+               
+                })
+            
+                $('#pwd_check').keyup(function CheckPW(){
+                    
+                    if($('#pwd').val() != $('#pwd_check').val()){
+                      $('#chkNotice').html('비밀번호 일치하지 않음')
+                      $('#chkNotice').attr('color', '#f82a2aa3')
+                      
+                    } 
+                    else{
+                      $('#chkNotice').html('비밀번호 일치함')
+                      $('#chkNotice').attr('color', '#199894b3')
+                 
+                    }
+            
+                })
+            })
+          })
+function getTextLength(str) {
+    var len = 0;
+    for (var i = 0; i < str.length; i++) {
+        if (escape(str.charAt(i)).length == 6) {
+            len++;
+        }
+        len++;
+    }
+    return len;
+}
+
+
+function checks(){ 
+    var pwdCheck= RegExp(/^[a-zA-Z0-9]{4,12}$/); 
+    var getName= RegExp(/^[가-힣]+$/);
+    var phoneCheck = RegExp(/^010+([0-9]{8})$/)
+    var chk_radio = document.getElementsByName('type');
+    var sel_type = null;
+    //이름 공백 검사 
+    if($("#name").val() == ""){ 
+        alert("이름을 입력해주세요"); 
+        $("#name").focus(); 
+        return false; } 
+
+    //휴대폰 번호 공백검사
+    if($("#phone").val() == ""){ 
+        alert("휴대폰번호 입력해주세요"); 
+        $("#phone").focus(); 
+        return false; } 
+    //휴대폰 번호 유효성
+    if(!phoneCheck.test($("#phone").val())){ 
+        alert("정규 휴대폰 번호를 입력하세요"); 
+        $("#phone").focus(); 
+        return false; } 
+
+    //local 공백 확인 
+    if($("#local").val() == ""){ 
+        alert("아이디를 입력해주세요"); 
+        $("#local").focus(); 
+        return false; }
+    //domain 공백 확인 
+    if($("#domain").val() == ""){ 
+    alert("이메일주소를 입력해주세요"); 
+    $("#domain").focus(); 
+    return false; }
+
+  //비밀번호 공백 확인
+    if($("#pwd").val() == ""){ 
+        alert("패스워드 입력바람"); 
+    $("#pwd").focus(); return false; } //아이디 비밀번호 같음 확인
+    if($("#id").val() == $("#pwd").val()){
+        alert("아이디와 비밀번호가 같습니다");
+        $("#pwd").val("");
+        $("#pwd").focus(); 
+        return false; } 
+        //비밀번호 유효성검사 
+    if(!pwdCheck.test($("#pwd").val())){ 
+        alert("형식에 맞게 입력해주세요");
+        $("#pwd").val(""); 
+        $("#pwd").focus(); 
+        return false; } 
+        //비밀번호 확인란 공백 확인
+    if($("#pwd_check").val() == ""){ 
+        alert("패스워드 확인란을 입력해주세요"); 
+        $("#pwd_check").focus(); 
+        return false; }
+        //비밀번호 서로확인 
+    if($("#pwd").val() != $("#pwd_check").val()){ 
+        alert("비밀번호가 상이합니다"); 
+        $("#pwd").val(""); 
+        $("#pwd_check").val(""); 
+        $("#pwd").focus(); return false; } 
+
+
+        //사용자 타입 유효성 검사
+    for(var i=0;i<chk_radio.length;i++){
+        if(chk_radio[i].checked == true)
+            sel_type = chk_radio[i].value;
+    }
+        if(sel_type == null){
+            alert("사용자 타입을 선택하세요."); 
+            return false;}
+ //중복체크 했는지 확인
+    if ($('#local').attr("check_result") == "fail"){
+    alert("아이디 중복체크를 해주시기 바랍니다.");
+    $('#local').focus();
+    return false;
+  }
+}
+
+
+//이메일 중복확인
+
+function id_overlap_check() {
+
+$('#local').change(function () {
+  $('#id_check_success').hide();
+  $('.id_overlap_button').show();
+  $('#local').attr("check_result", "fail");
+})
+$('#domain').change(function () {
+  $('#id_check_success').hide();
+  $('.id_overlap_button').show();
+  $('#local').attr("check_result", "fail");
+})
+
+if ($('#local').val() == '') {
+  alert('이메일을 입력해주세요.')
+  return;
+}
+
+local_overlap_input = document.querySelector('input[name="local"]');
+domain_overlap_input = document.querySelector('input[name="domain"]');
+$.ajax({
+  url: "/overlap_check",
+  data: {
+    'local': local_overlap_input.value,
+    'domain': domain_overlap_input.value
+  },
+  datatype: 'json',
+  success: function (data) {
+    console.log(data['overlap']);
+    if (data['overlap'] == "fail") {
+        $('#id_check_success').show();
+        $('#id_check_success').html('이메일 중복')
+        $('#id_check_success').attr('color', '#f82a2aa3')
+        domain_overlap_input.focus();
+        return;
+    } else {
+        $('#local').attr("check_result", "success");
+        $('#id_check_success').html('사용 가능')
+        $('#id_check_success').attr('color', '#199894b3')
+        $('#id_check_success').show();
+        return;
+    }
+  }
+});
+}
+
+
+        </script>
+    </head>
+
+    <body>
+            <form method = "POST" action = "/sql_register" onsubmit = 'return checks();'>
+                <fieldset style="width:550px">
+                    <legend>Form 요소</legend>
+                    <p>이름 : <input id = "name" type="text" name="name" placeholder="이름 입력"/></p>
+                    <p>휴대폰 번호 : <input id = "phone" type="number" name="phone" placeholder="(-)제외"/></p>
+                    <p>이메일 : <input style ="width:120px" id = "local" type="text" name="local" placeholder="아이디 입력" check_result="fail" required/><span>@</span>
+                        <input id = "domain" type="text" name="domain" placeholder="주소 입력" />
+                        <button type="button" class="id_overlap_button" onclick="id_overlap_check()">중복검사</button>
+                        <font id="id_check_success" style="display: none;"></font>
+                    </p>
+                    <p>비밀번호 : <input id = "pwd" type="password" name="pwd" placeholder="비밀번호"/></p>
+                    <p>비밀번호 확인: <input id = "pwd_check" type="password" name="pwd_check" placeholder="비밀번호 확인"/>
+                     </p>
+                    <font id = "chkNotice"></font>
+                    
+                    <!-- 라디오 버튼 : 여러개 중 하나만 선택 가능 -->
+                    <p>사용자 타입 : <input type="radio" name="type" value="patient"/>환자
+                                    <input type="radio" name="type" value="hospital"/>병원
+                                    <input type="radio" name="type" value="store"/>약국/상점
+                    </p>
+                    
+                    <p><input type="submit" name = "submit" value ="회원가입">
+                       <button type = "button" style="margin-left : 300px;" onclick="location.href='/'">취소</button>
+                    </p>
+                   
+                    
+                </fieldset>
+            </form>
+            
+                
+        </body>
+        
+        
+
+</html>

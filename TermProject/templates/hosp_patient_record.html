@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "UTF-8" />
+        <title>
+            patient_record
+        </title>
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script src="./jquery-ui-1.12.1/datepicker-ko.js"></script>
+        <style>
+            * {
+  margin: 1;
+  padding: 1;
+}
+
+body {
+  margin: 20px;
+}
+
+        </style>
+
+              <script>  
+              $(document).ready(function () {  
+    /*********************************이름검색****************************/ 
+                  $('#name_search').submit((e)=>{  
+                      e.preventDefault()
+                      if(e.target.name.value == ""){
+                          alert("이름을 입력해주세요")
+                          return;
+                      }     
+                      FormData =   {
+                              "search_type" : "name_search",
+                              "table_name" : "hospital_reservation",
+                              "data" : e.target.name.value
+                          } 
+                    $.ajax({
+                        type :"POST",
+                        url: "/visit_history",
+                        cache: true,
+                        data : JSON.stringify(FormData),
+                        datatype :"json",
+                        contentType:"application/json",
+                        success: res=>{
+                        find_result = JSON.parse(res)
+                        if(find_result["result"] == "fail"){
+                            alert("방문기록이 없습니다")
+                            return;
+                        }
+                        else{
+                            
+                            let tBodyHtml = ''
+                            for(let row of find_result){
+                                tBodyHtml += `<tr>
+                                    <td></td>
+                                    <td>${row["user_name"]}</td>
+                                    <td>${row["user_phone"]}</td>
+                                    <td>${row["date"]}</td>
+                                    <td style = "text-align:center;">${row["time"]}시</td>
+                                    <td style = "text-align:center;"><form id = "open" method="POST" action = "/hosp_open_prescription">
+                            <button type="submit" name="submit" value="${row["prescription_id"]}">보기</button>
+                        </form></td></tr>`
+                            }
+                            $('table tbody').html(tBodyHtml)
+                        }
+                        } 
+                    })
+                    })
+/*********************************번호검색********************************/
+                    $('#phone_search').submit((e)=>{  
+                      e.preventDefault()    
+                      if(e.target.phone.value == ""){
+                          alert("전화번호를 입력해주세요")
+                          return;
+                      }  
+                      FormData =   {
+                              "search_type" : "phone_search",
+                              "table_name" : "hospital_reservation",
+                              "data" : e.target.phone.value
+                          } 
+                    $.ajax({
+                        type :"POST",
+                        url: "/visit_history",
+                        cache: true,
+                        data : JSON.stringify(FormData),
+                        datatype :"json",
+                        contentType:"application/json",
+                        success: res=>{
+                        find_result = JSON.parse(res)
+                        if(find_result["result"] == "fail"){
+                            alert("방문기록이 없습니다")
+                            return;
+                        }
+                        else{
+                            
+                            let tBodyHtml = ''
+                            for(let row of find_result){
+                                tBodyHtml += `<tr>
+                                    <td></td>
+                                    <td>${row["user_name"]}</td>
+                                    <td>${row["user_phone"]}</td>
+                                    <td>${row["date"]}</td>
+                                    <td>${row["time"]}시</td>
+                                    <td style = "text-align:center;"><form method="POST" action="/hosp_open_prescription">
+                            <button type="submit" name="submit" value="${row["prescription_id"]}">보기</button>
+                        </form></td></tr>`
+                            }
+                            $('table tbody').html(tBodyHtml)
+                        }
+                        } 
+                    })
+                    })
+/*********************************날짜검색*************************************/
+                    $('#date_search').submit((e)=>{  
+                      e.preventDefault() 
+                      if(e.target.datepicker.value == ""){
+                          alert("날짜를 선택해주세요")
+                          return;
+                      }     
+                      FormData =   {
+                              "search_type" : "date_search",
+                              "table_name" : "hospital_reservation",
+                              "data" : e.target.datepicker.value
+                          } 
+                    $.ajax({
+                        type :"POST",
+                        url: "/visit_history",
+                        cache: true,
+                        data : JSON.stringify(FormData),
+                        datatype :"json",
+                        contentType:"application/json",
+                        success: res=>{
+                        find_result = JSON.parse(res)
+                        if(find_result["result"] == "fail"){
+                            alert("방문기록이 없습니다")
+                            return;
+                        }
+                        else{
+                            
+                            let tBodyHtml = ''
+                            for(let row of find_result){
+                                tBodyHtml += `<tr>
+                                    <td></td>
+                                    <td>${row["user_name"]}</td>
+                                    <td>${row["user_phone"]}</td>
+                                    <td>${row["date"]}</td>
+                                    <td>${row["time"]}시</td>
+                                    <td style = "text-align:center;"><form method="POST" action="/hosp_open_prescription">
+                            <button type="submit" name="submit" value="${row["prescription_id"]}">보기</button>
+                        </form></td></tr>`
+                            }
+                            $('table tbody').html(tBodyHtml)
+                        }
+                        } 
+                    })
+                    })
+
+            $('#datepicker').datepicker({
+            dateFormat: 'yy-mm-dd',
+            maxDate: "+0D", //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후) 
+            dayNames: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
+            dayNamesMin: ['일','월', '화', '수', '목', '금', '토'], 
+            monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
+            monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+            });
+                                
+            })
+
+
+        </script>
+    </head>
+
+    <body>
+        
+        <form action = '/hosp_menu'>
+            <button type = "submit">돌아가기</button>
+            </form>
+        <h3>방문자 명단</h3>
+            
+                <form method="POST" id = "name_search">
+                    <p>이름 검색: <input type = "text" id="name" name= "name">
+                        <button type="submit">검색</button>
+                    </p>
+                </form>
+                <form method="POST" id = "phone_search">
+                    <p>번호 검색: <input type = "text" id="phone" name= "phone">
+                        <button type="submit">검색</button>
+                    </p>
+                </form>
+                <form method="POST" id = "date_search">
+                    <p>날짜 검색: <input type="text" name="datepicker" id="datepicker" readonly>
+                        <button type="submit">검색</button>
+                    </p>
+                </form>
+            
+    
+
+        <style>
+            
+                #list tbody>tr {
+                  counter-increment: aaa;
+                }
+                #list tbody>tr>td:first-child:before {
+                  content: counter(aaa) " ";
+                }
+                </style>
+        <table id = "list" border = '1'>
+            <thead>
+                <tr>
+                    <th>no.</th>
+                    <th>이름</th>
+                    <th>전화번호</th>
+                    <th>방문 날짜</th>
+                    <th>방문 시간</th>
+                    <th>처방전 열람</th>
+             
+                </tr>
+            </thead>
+            <tbody>
+               
+            </tbody>
+        </table>          
+    </body>
+</html>

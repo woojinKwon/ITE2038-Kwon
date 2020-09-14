@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "UTF-8" />
+        <title>
+            patient_information
+        </title>
+<style>
+td {
+    border :1px solid;
+   
+}
+</style>
+        <script
+        src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous"></script>
+              <script>  
+              
+              $(document).ready(function () {             
+                    $.ajax({
+                        
+                          url: "/prescription_data",
+                          cache: true
+                    }).done(data=>{
+                            result = JSON.parse(data)
+                            let tBodyHtml = ''
+                                tBodyHtml += `            <tr>
+                <td >발급 연-월-일 시:분</td>
+                <td colspan="3">${result["issued_date"]}</td>
+            </tr>
+            <tr>
+                <td >의료 기관 명칭</td>
+                <td colspan="3">${result["hosp_name"]}</td>
+                </tr>
+                <tr>
+                <td >환자 성명</td>
+                <td colspan="3">${result["patient_name"]}</td>
+                </tr>
+            <tr>
+                <td style = "width:200px">처방 약품 명칭</td>
+                <td style = "width: 100px">1회 투약량</td>
+                <td style = "width: 100px;" >1일 투여횟수</td>
+                <td style = "width: 100px">총 투약일수</td>
+            </tr>
+            <tr>
+                <td style = " width:200px">${result["medi_name1"]}</td>
+                <td style = " width: 100px">${result["one_dose1"]}</td>
+                <td style = "width: 100px">${result["perday1"]}</td>
+                <td style = "width: 100px">${result["totalday1"]}</td>
+            </tr>
+            <tr>
+                    <td style = " width:200px">${result["medi_name2"]}</td>
+                <td style = " width: 100px">${result["one_dose2"]}</td>
+                <td style = "width: 100px">${result["perday2"]}</td>
+                <td style = "width: 100px">${result["totalday2"]}</td>
+            </tr>
+            <tr>
+                    <td style = " width:200px">${result["medi_name3"]}</td>
+                <td style = " width: 100px">${result["one_dose3"]}</td>
+                <td style = "width: 100px">${result["perday3"]}</td>
+                <td style = "width: 100px">${result["totalday3"]}</td>
+            </tr>
+            <tr>
+                    <td style = " width:200px">${result["medi_name4"]}</td>
+                <td style = " width: 100px">${result["one_dose4"]}</td>
+                <td style = "width: 100px">${result["perday4"]}</td>
+                <td style = "width: 100px">${result["totalday4"]}</td>
+            </tr>
+            <tr style = "background-color:rgba(116, 113, 113, 0.295)">
+                <td colspan="4" style = "text-align: center;">의약품 조제 명세</td>
+            </tr>
+            <tr>
+                <td >조제기관명칭</td>
+                <td colspan="3">${result["pharmacy_name"]}</td>
+            </tr>
+            <tr>
+                <td >조제 연-월-일 시:분</td>
+                <td colspan="3">${result["pharmacy_date"]}</td>
+            </tr>
+            <tr style="height: 50px;">
+                <td >비고</td>
+                <td colspan="3" style=" width:300px; word-break: break-all;">${result["comment"]}</td>
+            </tr>`
+                            
+                            $('table').html(tBodyHtml)
+                          })
+                })
+
+
+              </script>
+    </head>
+
+    <body>
+        
+        <form action = '/store_patient_record'>
+            <button type = "submit">돌아가기</button>
+            </form>
+            <style> input:focus, textarea:focus{     outline: none; } </style>
+
+    
+        <legend>처방전</legend>
+        <table style="border: 1px solid; border-collapse: collapse;">   
+
+            <tr>
+                <td >발급 연-월-일 시:분</td>
+                <td colspan="3">-</td>
+            </tr>
+            <tr>
+                <td >환자 성명</td>
+                <td colspan="3">-</td>
+                </tr>
+            <tr>
+                <td style = "width:200px">처방 약품 명칭</td>
+                <td style = "width: 100px">1회 투약량</td>
+                <td style = "width: 100px;" >1일 투여횟수</td>
+                <td style = "width: 100px">총 투약일수</td>
+            </tr>
+            <tr>
+                <td style = " width:200px">-</td>
+                <td style = " width: 100px">-</td>
+                <td style = "width: 100px">-</td>
+                <td style = "width: 100px">-</td>
+            </tr>
+            <tr>
+                <td style = " width:200px">-</td>
+                <td style = " width: 100px">-</td>
+                <td style = "width: 100px">-</td>
+                <td style = "width: 100px">-</td>
+            </tr>
+            <tr>
+                <td style = " width:200px">-</td>
+                <td style = " width: 100px">-</td>
+                <td style = "width: 100px">-</td>
+                <td style = "width: 100px">-</td>
+            </tr>
+            <tr>
+                <td style = " width:200px">-</td>
+                <td style = " width: 100px">-</td>
+                <td style = "width: 100px">-</td>
+                <td style = "width: 100px">-</td>
+            </tr>
+            <tr style = "background-color:rgba(116, 113, 113, 0.295)">
+                <td colspan="4" style = "text-align: center;">의약품 조제 명세</td>
+            </tr>
+            <tr>
+                <td >조제기관명칭</td>
+                <td colspan="3">-</td>
+            </tr>
+            <tr>
+                <td >조제 연-월-일 시:분</td>
+                <td colspan="3">-</td>
+            </tr>
+            <tr style="height: 50px;">
+                <td >비고</td>
+                <td colspan="3" style=" width:300px; word-break: break-all;">-</td>
+            </tr>
+            </table>   
+    </body>
+</html>

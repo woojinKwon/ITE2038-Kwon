@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Document</title>
+
+  <script
+    src="https://code.jquery.com/jquery-3.4.1.js"
+    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+  <script>
+
+function login_check() {
+
+local_login_input = document.querySelector('input[name="local"]');
+domain_login_input = document.querySelector('input[name="domain"]');
+pwd_login_input = document.querySelector('input[name="pwd"]');
+console.log(local_login_input,domain_login_input,pwd_login_input)
+
+$.ajax({
+  url: "/login_check",
+  async: false,
+  data: {
+    'local': local_login_input.value,
+    'domain': domain_login_input.value,
+    'pwd': pwd_login_input.value
+  },
+  datatype: 'json',
+  success: function (data) {
+    console.log(data['login']);
+    if (data['login'] == "fail") {
+        $('#local').attr("login_success", "fail");
+        
+    } else {
+        $('#local').attr("login_success", "success");
+      
+    }
+  }
+})
+
+if ($('#local').val() == '') {
+  alert('이메일을 입력해주세요.')
+  return false;
+}
+if ($('#domain').val() == '') {
+  alert('이메일을 입력해주세요.')
+  return false;
+}
+if ($('#pwd').val() == '') {
+  alert('패스워드를 입력해주세요.')
+  return false;
+}
+
+if($('#local').attr("login_success") == "fail"){
+    alert("이메일이나 비밀번호가 올바르지 않습니다.")
+    return false}
+  else
+    return true
+} 
+
+  </script>
+</head>
+
+<body>
+    <form method = "POST" action ='/login' onsubmit = 'return login_check();'>
+      <fieldset style="width:400px">
+          <legend>로그인</legend>
+          <p>이메일 : <input style= "width:100px;" class = "box" id = "local" type="text" name="local" placeholder="아이디 입력" login_success = "fail" required/>
+          <span>@</span>
+          <input style= "width:170px;" class = "box" id = "domain" type="text" name="domain" placeholder="주소 입력" />
+          </p>
+          <p>비밀번호 : <input class = "box" id = "pwd"  type="password" name="pwd" placeholder="비밀번호"/><span></span> 
+          <input style="margin-left : 67px;" type = "submit" value = "로그인"></p>
+      </fieldset>
+  </form>
+  <a href="/register" title="회원가입"><font size = "2px">
+    계정이 없으면 회원가입을 해주시기 바랍니다.
+  </a></font>
+  <div style= "margin-top :100px">
+    <h4 style="color:red">*첫 이용시 초기 테이블설정을 위해 초기설정을 꼭 누르셔야합니다</h4>
+    <form action='/init'>
+      <button type = "submit">초기설정</button>
+    </form>
+  </div> 
+</body>
+
+</html>
